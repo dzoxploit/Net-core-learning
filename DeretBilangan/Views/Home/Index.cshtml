@@ -1,0 +1,68 @@
+﻿@model DeretVm
+@{
+    ViewData["Title"] = "Deret Bilangan";
+    var h = Model.Hasil;
+    var dicari = Model.Input.AngkaDicari;
+}
+
+<div class="well">
+    <h1 class="page-title"><i class="fa fa-calculator"></i>Deret Bilangan</h1>
+    <p class="page-sub rumus">
+        2 + 3 + 4 + 4 + 6 + 8 + 6 + 9 + 12 ... n = &sum;Bilangan &nbsp;&middot;&nbsp;
+        kelompok ke-<i>k</i> berisi <code>2k, 3k, 4k</code>
+    </p>
+    <hr class="garis" />
+
+    <form method="get" asp-action="Index" novalidate>
+        <div asp-validation-summary="All" class="mb-3"></div>
+
+        <div class="form-row-x">
+            <label asp-for="Input.JumlahDeret"></label>
+            <input asp-for="Input.JumlahDeret" name="JumlahDeret" type="number" min="@Deret.Minimal" max="@Deret.Maksimal"
+                   class="form-control" autofocus />
+        </div>
+
+        <div class="form-row-x">
+            <label asp-for="Input.AngkaDicari"></label>
+            <input asp-for="Input.AngkaDicari" name="AngkaDicari" type="number" class="form-control" />
+        </div>
+
+        <div class="ok-row">
+            <button type="submit" class="btn-raised">OK</button>
+        </div>
+    </form>
+
+    <hr class="garis" />
+
+    <div class="form-row-x lebar">
+        <label>Deret</label>
+        @if (h is null)
+        {
+            <div class="hasil kosong-hasil">Isi Jumlah Deret lalu klik OK</div>
+        }
+        else
+        {
+            <div class="hasil">
+                @for (var i = 0; i < h.Bilangan.Count; i++)
+                {
+                    if (i > 0) { <text> + </text> }
+                    if (h.Bilangan[i] == dicari) { <span class="cocok" title="Posisi @(i + 1)">@h.Bilangan[i]</span> }
+                    else { @h.Bilangan[i] }
+                }
+            </div>
+        }
+    </div>
+
+    <div class="form-row-x lebar">
+        <label>Posisi Ditemukan</label>
+        @if (h is null) { <div class="hasil kosong-hasil">-</div> }
+        else if (dicari is null) { <div class="hasil kosong-hasil">Angka yang dicari tidak diisi</div> }
+        else if (h.Posisi.Count == 0) { <div class="hasil kosong-hasil">Angka @dicari tidak ditemukan</div> }
+        else { <div class="hasil">@string.Join(", ", h.Posisi)</div> }
+    </div>
+
+    <div class="form-row-x lebar">
+        <label>Hasil Penjumlahan</label>
+        <div class="hasil @(h is null ? "kosong-hasil" : "")">@(h?.Jumlah.ToString() ?? "-")</div>
+    </div>
+</div>

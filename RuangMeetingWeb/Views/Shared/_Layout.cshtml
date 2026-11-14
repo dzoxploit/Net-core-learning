@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Reservasi Ruang Meeting</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;500;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    @{ var controller = ViewContext.RouteData.Values["controller"]?.ToString(); }
+    <nav class="topbar">
+        <button class="toggle-btn" type="button" aria-label="Menu" id="menuToggle"><i class="fa fa-bars fa-lg"></i></button>
+        <a class="brand" asp-controller="Reservasi" asp-action="Index"><i class="fa fa-calendar-check-o fa-fw"></i> Ruang Meeting</a>
+        <span class="topbar-right"><i class="fa fa-clock-o fa-fw"></i> @DateTime.Now.ToString("dd/MM/yyyy")</span>
+    </nav>
+
+    <aside class="nav-side-menu">
+        <div class="side-brand"><i class="fa fa-building-o fa-fw"></i> Halaman Admin</div>
+        <ul>
+            <li class="@(controller == "Reservasi" ? "active" : "")">
+                <a asp-controller="Reservasi" asp-action="Index"><i class="fa fa-calendar fa-lg"></i>Reservasi Ruangan</a>
+            </li>
+            <li class="@(controller == "Ruangan" ? "active" : "")">
+                <a asp-controller="Ruangan" asp-action="Index"><i class="fa fa-th-large fa-lg"></i>Master Ruangan</a>
+            </li>
+        </ul>
+    </aside>
+
+    <main id="page-content-wrapper">
+        @if (TempData["Sukses"] is string sukses)
+        {
+            <div class="alert alert-success"><i class="fa fa-check-circle fa-fw"></i> @sukses</div>
+        }
+        @if (TempData["Error"] is string error)
+        {
+            <div class="alert alert-danger"><i class="fa fa-exclamation-triangle fa-fw"></i> @error</div>
+        }
+        @RenderBody()
+    </main>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

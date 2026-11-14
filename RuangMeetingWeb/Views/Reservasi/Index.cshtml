@@ -1,0 +1,154 @@
+@model ReservasiPageVm
+@{
+    ViewData["Title"] = "Reservasi Ruangan";
+    var f = Model.Form;
+    var dipilih = f.ReservasiId is not null;
+    // only active rooms can be booked; when editing, keep the current (maybe now inactive) room visible
+    var pilihanRuang = Model.Ruangan.Where(r => r.IsAktif || r.RuanganId == f.RuanganId).OrderBy(r => r.KodeRuangan);
+    var namaRuang = Model.Ruangan.ToDictionary(r => r.RuanganId);
+}
+
+<div class="well">
+    <h1 class="page-title"><i class="fa fa-calendar"></i>Reservasi Ruangan</h1>
+    <p class="page-sub">
+        @if (dipilih)
+        {
+            <text>Mengubah reservasi <code>@f.KodeReservasi</code> &middot; <a class="btn-flat p-0" asp-action="Index">batal / reservasi baru</a></text>
+        }
+        else
+        {
+            <text>Isi form lalu klik <code>Save</code>. Pilih baris pada tabel untuk <code>Edit</code> atau <code>Cancel</code>.</text>
+        }
+    </p>
+    <hr class="garis" />
+
+    <form id="formReservasi" method="post" asp-action="Save" novalidate data-guard>
+        <input type="hidden" asp-for="Form.ReservasiId" />
+        <input type="hidden" asp-for="Form.KodeReservasi" />
+        <input type="hidden" asp-for="Form.RowVersion" />
+        <input type="hidden" asp-for="Form.IdempotencyKey" />
+        <div asp-validation-summary="ModelOnly" class="mb-3"></div>
+
+        <div class="form-row-x">
+            <label asp-for="Form.RuanganId"></label>
+            <select asp-for="Form.RuanganId" id="ruanganId" class="form-select">
+                @foreach (var r in pilihanRuang)
+                {
+                    <option value="@r.RuanganId" data-kapasitas="@r.Kapasitas">@r.NamaRuangan (@r.KodeRuangan)@(r.IsAktif ? "" : " - Tidak Aktif")</option>
+                }
+            </select>
+            <span asp-validation-for="Form.RuanganId" class="field-validation-error"></span>
+        </div>
+
+        <div class="form-row-x lebar">
+            <label asp-for="Form.NamaPemesan"></label>
+            <div>
+                <input asp-for="Form.NamaPemesan" class="form-control" autocomplete="name" />
+                <span asp-validation-for="Form.NamaPemesan"></span>
+            </div>
+        </div>
+
+        <div class="form-row-x lebar">
+            <label asp-for="Form.JudulMeeting"></label>
+            <div>
+                <input asp-for="Form.JudulMeeting" class="form-control" autocomplete="off" />
+                <span asp-validation-for="Form.JudulMeeting"></span>
+            </div>
+        </div>
+
+        <div class="form-row-x">
+            <label asp-for="Form.Tanggal"></label>
+            <input asp-for="Form.Tanggal" type="date" class="form-control sempit" />
+            <span asp-validation-for="Form.Tanggal"></span>
+        </div>
+
+        <div class="form-row-x">
+            <label asp-for="Form.JamMulai"></label>
+            <input asp-for="Form.JamMulai" id="jamMulai" type="time" step="300" class="form-control sempit" />
+            <span asp-validation-for="Form.JamMulai"></span>
+        </div>
+
+        <div class="form-row-x">
+            <label asp-for="Form.JamSelesai"></label>
+            <input asp-for="Form.JamSelesai" id="jamSelesai" type="time" step="300" class="form-control sempit" />
+            <span>
+                <span class="note" id="hintDurasi"></span>
+                <span asp-validation-for="Form.JamSelesai"></span>
+            </span>
+        </div>
+
+        <div class="form-row-x">
+            <label asp-for="Form.JumlahPeserta"></label>
+            <input asp-for="Form.JumlahPeserta" id="jumlahPeserta" type="number" min="1" class="form-control sempit" />
+            <span>
+                <span class="note hint-warn" id="hintPeserta"></span>
+                <span asp-validation-for="Form.JumlahPeserta"></span>
+            </span>
+        </div>
+
+        <div class="form-row-x">
+            <label for="kapasitas">Kapasitas</label>
+            <input id="kapasitas" class="form-control computed sempit" readonly tabindex="-1" />
+            <span></span>
+        </div>
+
+        <div class="form-row-x">
+            <label asp-for="Form.Status"></label>
+            @if (dipilih)
+            {
+                <select asp-for="Form.Status" class="form-select sempit" asp-items="@(new SelectList(ReservasiPageVm.SemuaStatus))"></select>
+            }
+            else
+            {
+                <select class="form-select sempit" disabled><option>BOOKED</option></select>
+            }
+            <span asp-validation-for="Form.Status"></span>
+        </div>
+    </form>
+
+    <form method="get" asp-action="Index" class="filter-bar">
+        <label for="filterTanggal"><i class="fa fa-filter fa-fw"></i> Tampilkan tanggal</label>
+        <input id="filterTanggal" name="tanggal" type="date" class="form-control" value="@Model.Filter?.ToString("yyyy-MM-dd")" />
+        <button type="submit" class="btn-raised btn-info-x">Filter</button>
+        @if (Model.Filter is not null) { <a class="btn-flat" asp-action="Index">Semua</a> }
+    </form>
+
+    <div class="grid-box">
+        <table class="table-x">
+            <thead>
+                <tr><th>Ruangan</th><th>Pemesan</th><th>Judul Meeting</th><th>Tanggal</th><th>Mulai</th><th>Selesai</th><th>Peserta</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                @if (Model.Daftar.Count == 0)
+                {
+                    <tr><td colspan="8" class="kosong"><i class="fa fa-inbox fa-2x d-block mb-2"></i>Belum ada reservasi</td></tr>
+                }
+                @foreach (var r in Model.Daftar)
+                {
+                    <tr class="klik @(r.ReservasiId == f.ReservasiId ? "selected" : "")" data-href="@Url.Action("Index", new { id = r.ReservasiId })"
+                        title="@r.KodeReservasi">
+                        <td class="kiri">@r.NamaRuangan</td>
+                        <td class="kiri">@r.NamaPemesan</td>
+                        <td class="kiri">@r.JudulMeeting</td>
+                        <td>@r.Tanggal.ToString("dd/MM/yyyy")</td>
+                        <td>@r.JamMulai.ToString("HH:mm")</td>
+                        <td>@r.JamSelesai.ToString("HH:mm")</td>
+                        <td>@r.JumlahPeserta</td>
+                        <td><span class="badge-status badge-@r.Status">@r.Status</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="actions">
+        <button form="formReservasi" type="submit" class="btn-raised" asp-action="Save" disabled="@dipilih"><i class="fa fa-floppy-o fa-fw"></i> Save</button>
+        <button form="formReservasi" type="submit" class="btn-raised btn-info-x" asp-action="Edit" disabled="@(!dipilih)"><i class="fa fa-pencil fa-fw"></i> Edit</button>
+        <button form="formReservasi" type="submit" class="btn-raised btn-bahaya" asp-action="Cancel" disabled="@(!dipilih || f.Status == "CANCELLED")"
+                data-confirm="Batalkan reservasi @f.KodeReservasi?"><i class="fa fa-ban fa-fw"></i> Cancel</button>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/reservasi.js" asp-append-version="true"></script>
+}

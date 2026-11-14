@@ -1,0 +1,93 @@
+@model TarifPageVm
+@using System.Globalization
+@{
+    ViewData["Title"] = "Tarif & Kebijakan";
+    var id = CultureInfo.GetCultureInfo("id-ID");
+    var f = Model.Form;
+    var ubah = f.TarifId is not null;
+}
+
+<div class="well">
+    <h1 class="page-title"><i class="fa fa-sliders"></i>Tarif &amp; Kebijakan</h1>
+    <p class="page-sub">Tarif disimpan di tabel <code>TARIF</code> dan bisa diubah sesuai kebijakan. Transaksi lama tetap memakai tarif saat transaksi dibuat.</p>
+    <hr class="garis" />
+
+    <div class="grid-box mb-4">
+        <table class="table-x">
+            <thead>
+                <tr><th>Jenis Kendaraan</th><th>Tarif 1</th><th>Jam Tarif 1</th><th>Tarif 2 (per jam berikutnya)</th><th>Menit Gratis</th><th>Toleransi</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model.DaftarTarif)
+                {
+                    <tr class="klik @(t.TarifId == f.TarifId ? "selected" : "")" data-href="@Url.Action("Index", new { id = t.TarifId })">
+                        <td class="kiri">@t.JenisKendaraan</td>
+                        <td class="kanan">@t.Tarif1.ToString("N0", id)</td>
+                        <td>@t.JamTarif1 jam</td>
+                        <td class="kanan">@t.Tarif2.ToString("N0", id)</td>
+                        <td>&lt; @t.MenitGratis menit</td>
+                        <td>&gt; @t.MenitToleransi menit</td>
+                        <td>@if (t.IsAktif) { <span class="badge-gratis">Aktif</span> } else { <span class="badge-nonaktif">Nonaktif</span> }</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="panel-heading">
+        <i class="fa @(ubah ? "fa-pencil" : "fa-plus") fa-fw"></i>
+        @(ubah ? $"Ubah Tarif: {f.JenisKendaraan}" : "Tambah Jenis Kendaraan")
+    </div>
+    <form method="post" asp-action="Simpan" class="pt-3" novalidate>
+        <input type="hidden" asp-for="Form.TarifId" />
+        <input type="hidden" asp-for="Form.RowVer" />
+        <div asp-validation-summary="ModelOnly" class="mb-3"></div>
+
+        <div class="form-row-x">
+            <label asp-for="Form.JenisKendaraan"></label>
+            <input asp-for="Form.JenisKendaraan" class="form-control" />
+            <span asp-validation-for="Form.JenisKendaraan"></span>
+        </div>
+        <div class="form-row-x">
+            <label asp-for="Form.Tarif1"></label>
+            <input asp-for="Form.Tarif1" type="number" min="0" step="any" class="form-control" />
+            <span class="note">Tarif flat untuk jam-jam pertama <span asp-validation-for="Form.Tarif1"></span></span>
+        </div>
+        <div class="form-row-x">
+            <label asp-for="Form.JamTarif1"></label>
+            <input asp-for="Form.JamTarif1" type="number" min="1" max="24" class="form-control" />
+            <span class="note">Jumlah jam yang dicakup Tarif 1 (default 2) <span asp-validation-for="Form.JamTarif1"></span></span>
+        </div>
+        <div class="form-row-x">
+            <label asp-for="Form.Tarif2"></label>
+            <input asp-for="Form.Tarif2" type="number" min="0" step="any" class="form-control" />
+            <span class="note">Per jam berikutnya <span asp-validation-for="Form.Tarif2"></span></span>
+        </div>
+        <div class="form-row-x">
+            <label asp-for="Form.MenitGratis"></label>
+            <input asp-for="Form.MenitGratis" type="number" min="0" max="59" class="form-control" />
+            <span class="note">Durasi kurang dari ini tidak dikenakan biaya <span asp-validation-for="Form.MenitGratis"></span></span>
+        </div>
+        <div class="form-row-x">
+            <label asp-for="Form.MenitToleransi"></label>
+            <input asp-for="Form.MenitToleransi" type="number" min="0" max="59" class="form-control" />
+            <span class="note">Kelebihan menit di atas ini dihitung 1 jam penuh <span asp-validation-for="Form.MenitToleransi"></span></span>
+        </div>
+        <div class="form-row-x">
+            <label asp-for="Form.IsAktif"></label>
+            <div><input asp-for="Form.IsAktif" class="form-check-input" /></div>
+            <span></span>
+        </div>
+
+        <div class="actions">
+            @if (ubah) { <a class="btn-flat" asp-action="Index">Batal</a> }
+            <button type="submit" class="btn-raised"><i class="fa fa-floppy-o fa-fw"></i> Simpan</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+<script>
+document.querySelectorAll('tr[data-href]').forEach(tr => tr.addEventListener('click', () => location.href = tr.dataset.href));
+</script>
+}

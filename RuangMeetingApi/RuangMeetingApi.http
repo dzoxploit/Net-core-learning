@@ -1,0 +1,18 @@
+@host = http://localhost:5133
+@key = dev-ruang-meeting-api-key-ganti-di-produksi
+
+GET {{host}}/api/ruangan?aktif=true
+X-Api-Key: {{key}}
+
+###
+POST {{host}}/api/reservasi
+X-Api-Key: {{key}}
+Idempotency-Key: 8b0f3a52-6c1e-4b8e-9d55-3f5b7d2a1c01
+Content-Type: application/json
+
+{ "ruanganId": 1, "namaPemesan": "Budi", "judulMeeting": "Sprint Planning",
+  "tanggal": "2026-11-20", "jamMulai": "08:00", "jamSelesai": "10:00", "jumlahPeserta": 5 }
+
+###
+GET {{host}}/api/reservasi?tanggal=2026-11-20
+X-Api-Key: {{key}}

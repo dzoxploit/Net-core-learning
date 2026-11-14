@@ -1,0 +1,91 @@
+@model RuanganPageVm
+@{
+    ViewData["Title"] = "Master Ruangan";
+    var f = Model.Form;
+    var dipilih = f.RuanganId is not null;
+}
+
+<div class="well">
+    <h1 class="page-title"><i class="fa fa-th-large"></i>Master Data Ruangan</h1>
+    <p class="page-sub">
+        @if (dipilih)
+        {
+            <text>Mengubah ruangan <code>@f.KodeRuangan</code> &middot; <a class="btn-flat p-0" asp-action="Index">batal / ruangan baru</a></text>
+        }
+        else
+        {
+            <text>Ruangan berstatus <code>Tidak Aktif</code> tidak dapat dipakai untuk reservasi.</text>
+        }
+    </p>
+    <hr class="garis" />
+
+    <form id="formRuangan" method="post" asp-action="Save" novalidate data-guard>
+        <input type="hidden" asp-for="Form.RuanganId" />
+        <input type="hidden" asp-for="Form.RowVersion" />
+        <div asp-validation-summary="ModelOnly" class="mb-3"></div>
+
+        <div class="form-row-x">
+            <label asp-for="Form.KodeRuangan"></label>
+            <input asp-for="Form.KodeRuangan" class="form-control text-uppercase sempit" placeholder="MR-001" autocomplete="off" />
+            <span asp-validation-for="Form.KodeRuangan"></span>
+        </div>
+        <div class="form-row-x lebar">
+            <label asp-for="Form.NamaRuangan"></label>
+            <div>
+                <input asp-for="Form.NamaRuangan" class="form-control" autocomplete="off" />
+                <span asp-validation-for="Form.NamaRuangan"></span>
+            </div>
+        </div>
+        <div class="form-row-x lebar">
+            <label asp-for="Form.Lokasi"></label>
+            <div>
+                <input asp-for="Form.Lokasi" class="form-control" autocomplete="off" />
+                <span asp-validation-for="Form.Lokasi"></span>
+            </div>
+        </div>
+        <div class="form-row-x">
+            <label asp-for="Form.Kapasitas"></label>
+            <input asp-for="Form.Kapasitas" type="number" min="1" class="form-control sempit" />
+            <span asp-validation-for="Form.Kapasitas"></span>
+        </div>
+        <div class="form-row-x">
+            <label asp-for="Form.IsAktif"></label>
+            <select asp-for="Form.IsAktif" class="form-select sempit">
+                <option value="true">Aktif</option>
+                <option value="false">Tidak Aktif</option>
+            </select>
+            <span></span>
+        </div>
+    </form>
+
+    <div class="grid-box mt-4">
+        <table class="table-x">
+            <thead>
+                <tr><th>Kode Ruangan</th><th>Nama Ruangan</th><th>Lokasi</th><th>Kapasitas</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+                @if (Model.Daftar.Count == 0)
+                {
+                    <tr><td colspan="5" class="kosong"><i class="fa fa-inbox fa-2x d-block mb-2"></i>Belum ada ruangan</td></tr>
+                }
+                @foreach (var r in Model.Daftar)
+                {
+                    <tr class="klik @(r.RuanganId == f.RuanganId ? "selected" : "")" data-href="@Url.Action("Index", new { id = r.RuanganId })">
+                        <td class="kiri">@r.KodeRuangan</td>
+                        <td class="kiri">@r.NamaRuangan</td>
+                        <td class="kiri">@r.Lokasi</td>
+                        <td>@r.Kapasitas</td>
+                        <td>@if (r.IsAktif) { <span class="badge-gratis">Aktif</span> } else { <span class="badge-nonaktif">Tidak Aktif</span> }</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="actions">
+        <button form="formRuangan" type="submit" class="btn-raised" asp-action="Save" disabled="@dipilih"><i class="fa fa-floppy-o fa-fw"></i> Save</button>
+        <button form="formRuangan" type="submit" class="btn-raised btn-info-x" asp-action="Edit" disabled="@(!dipilih)"><i class="fa fa-pencil fa-fw"></i> Edit</button>
+        <button form="formRuangan" type="submit" class="btn-raised btn-bahaya" asp-action="Delete" disabled="@(!dipilih)"
+                data-confirm="Hapus ruangan @f.KodeRuangan?"><i class="fa fa-trash fa-fw"></i> Delete</button>
+    </div>
+</div>

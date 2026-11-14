@@ -1,0 +1,62 @@
+2026-11-14 16:27:17.126 +08:00 [INF] [] Microsoft.Hosting.Lifetime: Now listening on: http://localhost:5133
+2026-11-14 16:27:17.145 +08:00 [INF] [] Microsoft.Hosting.Lifetime: Application started. Press Ctrl+C to shut down.
+2026-11-14 16:27:17.145 +08:00 [INF] [] Microsoft.Hosting.Lifetime: Hosting environment: Development
+2026-11-14 16:27:17.145 +08:00 [INF] [] Microsoft.Hosting.Lifetime: Content root path: /Users/a/Documents/seniortest/RuangMeetingApi
+2026-11-14 16:27:22.235 +08:00 [WRN] [6a46c1d2b79348f9b8098eff6ef93523] RuangMeetingApi.Infrastructure.ApiKeyMiddleware: Ditolak: API key tidak valid dari ::1 untuk GET /api/ruangan
+2026-11-14 16:27:22.253 +08:00 [WRN] [6a46c1d2b79348f9b8098eff6ef93523] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/ruangan -> 401 in 21.3 ms
+2026-11-14 16:27:22.765 +08:00 [INF] [08ea94ad78394438942d1c4fde75cc76] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/ruangan -> 200 in 500.0 ms
+2026-11-14 16:27:22.873 +08:00 [WRN] [182b72cb4181410c97c66770a38d4036] Microsoft.EntityFrameworkCore.Query: The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+2026-11-14 16:27:23.104 +08:00 [INF] [182b72cb4181410c97c66770a38d4036] RuangMeetingApi.Services.ReservasiService: Reservasi RSV-000000001 dibuat: ruangan MR-001 "2026-11-20" "08:00:00.0000000"-"10:00:00.0000000", 5 peserta, pemesan Budi
+2026-11-14 16:27:23.115 +08:00 [INF] [182b72cb4181410c97c66770a38d4036] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP POST /api/reservasi -> 201 in 340.2 ms
+2026-11-14 16:27:23.135 +08:00 [INF] [f6682925ab2f489bb32f42b8861e87ed] RuangMeetingApi.Services.ReservasiService: Idempotent replay: reservasi RSV-000000001 sudah dibuat dengan key yang sama
+2026-11-14 16:27:23.135 +08:00 [INF] [f6682925ab2f489bb32f42b8861e87ed] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP POST /api/reservasi -> 200 in 9.8 ms
+2026-11-14 16:27:23.169 +08:00 [WRN] [demo-overlap-1] RuangMeetingApi.Services.ReservasiService: Reservasi ditolak: bentrok dengan RSV-000000001 di ruangan MR-001 "2026-11-20" "08:00:00.0000000"-"10:00:00.0000000"
+2026-11-14 16:27:23.171 +08:00 [WRN] [demo-overlap-1] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP POST /api/reservasi -> 409 in 21.6 ms
+2026-11-14 16:27:23.187 +08:00 [WRN] [8b5ca96cc2b2405d8a5d9cfe1aeebbd5] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP POST /api/reservasi -> 422 in 2.3 ms
+2026-11-14 16:27:23.208 +08:00 [WRN] [9735014fbc7243b499881bf02d63fbcf] RuangMeetingApi.Services.ReservasiService: Reservasi ditolak: 50 peserta melebihi kapasitas 10 ruangan MR-001
+2026-11-14 16:27:23.209 +08:00 [WRN] [9735014fbc7243b499881bf02d63fbcf] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP POST /api/reservasi -> 422 in 10.8 ms
+2026-11-14 16:30:42.792 +08:00 [INF] [] Microsoft.Hosting.Lifetime: Application is shutting down...
+2026-11-14 16:30:45.642 +08:00 [INF] [] Microsoft.Hosting.Lifetime: Now listening on: http://localhost:5133
+2026-11-14 16:30:45.661 +08:00 [INF] [] Microsoft.Hosting.Lifetime: Application started. Press Ctrl+C to shut down.
+2026-11-14 16:30:45.662 +08:00 [INF] [] Microsoft.Hosting.Lifetime: Hosting environment: Development
+2026-11-14 16:30:45.662 +08:00 [INF] [] Microsoft.Hosting.Lifetime: Content root path: /Users/a/Documents/seniortest/RuangMeetingApi
+2026-11-14 16:30:54.666 +08:00 [INF] [0HNQ256CHKO6V:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/reservasi/1 -> 200 in 572.8 ms
+2026-11-14 16:30:54.724 +08:00 [INF] [0HNQ256CHKO6V:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/ruangan -> 200 in 42.6 ms
+2026-11-14 16:30:54.758 +08:00 [INF] [0HNQ256CHKO6V:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/reservasi -> 200 in 30.0 ms
+2026-11-14 16:30:56.012 +08:00 [INF] [0HNQ256CHKO73:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/ruangan -> 200 in 41.6 ms
+2026-11-14 16:31:20.379 +08:00 [INF] [0HNQ256KCC9P2:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/ruangan -> 200 in 14.9 ms
+2026-11-14 16:31:20.397 +08:00 [INF] [0HNQ256KCC9P2:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/reservasi -> 200 in 5.8 ms
+2026-11-14 16:31:20.589 +08:00 [WRN] [0HNQ256KCC9P4:00000001] Microsoft.EntityFrameworkCore.Query: The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+2026-11-14 16:31:20.765 +08:00 [INF] [0HNQ256KCC9P4:00000001] RuangMeetingApi.Services.ReservasiService: Reservasi RSV-000000002 dibuat: ruangan MR-002 2026-11-21 13:00-14:00, 4 peserta, pemesan Sari
+2026-11-14 16:31:20.773 +08:00 [INF] [0HNQ256KCC9P4:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP POST /api/reservasi -> 201 in 235.9 ms
+2026-11-14 16:31:20.788 +08:00 [INF] [0HNQ256KCC9P5:00000001] RuangMeetingApi.Services.ReservasiService: Idempotent replay: reservasi RSV-000000002 sudah dibuat dengan key yang sama
+2026-11-14 16:31:20.788 +08:00 [INF] [0HNQ256KCC9P5:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP POST /api/reservasi -> 200 in 3.1 ms
+2026-11-14 16:31:20.809 +08:00 [WRN] [0HNQ256KCC9P6:00000001] RuangMeetingApi.Services.ReservasiService: Reservasi ditolak: bentrok dengan RSV-000000002 di ruangan MR-002 2026-11-21 13:00-14:00
+2026-11-14 16:31:20.817 +08:00 [WRN] [0HNQ256KCC9P6:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP POST /api/reservasi -> 409 in 15.2 ms
+2026-11-14 16:31:20.821 +08:00 [INF] [0HNQ256KCC9P6:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/ruangan -> 200 in 2.1 ms
+2026-11-14 16:31:20.824 +08:00 [INF] [0HNQ256KCC9P6:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/reservasi -> 200 in 1.9 ms
+2026-11-14 16:31:20.843 +08:00 [INF] [0HNQ256KCC9P7:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/ruangan -> 200 in 2.3 ms
+2026-11-14 16:35:00.029 +08:00 [INF] [] Microsoft.Hosting.Lifetime: Application is shutting down...
+2026-11-14 19:57:06.022 +08:00 [INF] [] Microsoft.Hosting.Lifetime: Now listening on: http://localhost:5133
+2026-11-14 19:57:06.057 +08:00 [INF] [] Microsoft.Hosting.Lifetime: Application started. Press Ctrl+C to shut down.
+2026-11-14 19:57:06.057 +08:00 [INF] [] Microsoft.Hosting.Lifetime: Hosting environment: Development
+2026-11-14 19:57:06.057 +08:00 [INF] [] Microsoft.Hosting.Lifetime: Content root path: /Users/a/Documents/seniortest/RuangMeetingApi
+2026-11-14 19:57:32.698 +08:00 [INF] [0HNQ28PRAP569:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/ruangan -> 200 in 819.2 ms
+2026-11-14 19:57:32.863 +08:00 [INF] [0HNQ28PRAP569:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/reservasi -> 200 in 144.0 ms
+2026-11-14 19:58:37.926 +08:00 [WRN] [0HNQ28PRAP56C:00000003] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP POST /api/reservasi -> 422 in 82.2 ms
+2026-11-14 19:58:37.938 +08:00 [INF] [0HNQ28PRAP56C:00000003] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/ruangan -> 200 in 7.0 ms
+2026-11-14 19:58:37.945 +08:00 [INF] [0HNQ28PRAP56C:00000003] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/reservasi -> 200 in 6.1 ms
+2026-11-14 19:58:47.695 +08:00 [INF] [0HNQ28PRAP56A:00000004] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/reservasi/1 -> 200 in 37.3 ms
+2026-11-14 19:58:47.701 +08:00 [INF] [0HNQ28PRAP56A:00000004] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/ruangan -> 200 in 4.8 ms
+2026-11-14 19:58:47.706 +08:00 [INF] [0HNQ28PRAP56A:00000004] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/reservasi -> 200 in 3.6 ms
+2026-11-14 19:59:21.802 +08:00 [INF] [0HNQ28PRAP56C:00000007] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/ruangan -> 200 in 10.8 ms
+2026-11-14 19:59:21.813 +08:00 [INF] [0HNQ28PRAP56C:00000007] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/reservasi -> 200 in 7.3 ms
+2026-11-14 20:00:04.287 +08:00 [WRN] [0HNQ28PRAP56A:00000008] Microsoft.EntityFrameworkCore.Query: The query uses the 'First'/'FirstOrDefault' operator without 'OrderBy' and filter operators. This may lead to unpredictable results.
+2026-11-14 20:00:04.537 +08:00 [INF] [0HNQ28PRAP56A:00000008] RuangMeetingApi.Services.ReservasiService: Reservasi RSV-000000051 dibuat: ruangan MR-001 2026-11-26 20:00-21:00, 1 peserta, pemesan ffsf
+2026-11-14 20:00:04.549 +08:00 [INF] [0HNQ28PRAP56A:00000008] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP POST /api/reservasi -> 201 in 290.2 ms
+2026-11-14 20:00:04.556 +08:00 [INF] [0HNQ28PRAP56A:00000009] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/ruangan -> 200 in 2.8 ms
+2026-11-14 20:00:04.559 +08:00 [INF] [0HNQ28PRAP56A:00000009] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/reservasi -> 200 in 2.2 ms
+2026-11-14 20:00:24.268 +08:00 [INF] [0HNQ28PRAP56D:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/ruangan -> 200 in 7.3 ms
+2026-11-14 20:00:24.275 +08:00 [INF] [0HNQ28PRAP56D:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/reservasi -> 200 in 4.8 ms
+2026-11-14 20:30:24.189 +08:00 [INF] [0HNQ28PRAP56J:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/ruangan -> 200 in 43.1 ms
+2026-11-14 20:30:24.199 +08:00 [INF] [0HNQ28PRAP56J:00000001] Serilog.AspNetCore.RequestLoggingMiddleware: HTTP GET /api/reservasi -> 200 in 4.4 ms

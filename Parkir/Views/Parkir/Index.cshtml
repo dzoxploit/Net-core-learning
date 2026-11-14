@@ -1,0 +1,193 @@
+@model ParkirPageVm
+@using System.Globalization
+@{
+    ViewData["Title"] = "Transaksi Parkir";
+    var id = CultureInfo.GetCultureInfo("id-ID");
+    var f = Model.Form;
+    var dipilih = f.TransaksiId is not null;
+    var tarifAktif = Model.DaftarTarif.FirstOrDefault(t => t.TarifId == f.TarifId);
+    string Rp(decimal v) => v.ToString("N0", id);
+}
+
+<div class="well">
+    <h1 class="page-title"><i class="fa fa-car"></i>Transaksi Parkir</h1>
+    <p class="page-sub">
+        @if (dipilih)
+        {
+            <text>Mengubah transaksi <code>@f.NoTransaksi</code> &middot; <a class="btn-flat p-0" asp-action="Index">batal / transaksi baru</a></text>
+        }
+        else
+        {
+            <text>Isi data kendaraan, lalu klik <code>Save</code>. Pilih baris pada tabel untuk <code>Edit</code> atau <code>Delete</code>.</text>
+        }
+    </p>
+    <hr class="garis" />
+
+    <form id="formParkir" method="post" asp-action="Save" novalidate>
+        <input type="hidden" asp-for="Form.TransaksiId" />
+        <input type="hidden" asp-for="Form.NoTransaksi" />
+        <input type="hidden" asp-for="Form.RowVer" />
+        <input type="hidden" asp-for="Form.IdempotencyKey" />
+
+        <div asp-validation-summary="ModelOnly" class="mb-3"></div>
+
+        <div class="form-row-x">
+            <label asp-for="Form.TarifId">Jenis Kendaraan</label>
+            <select asp-for="Form.TarifId" class="form-select" id="tarifId">
+                @foreach (var t in Model.DaftarTarif.Where(t => t.IsAktif || t.TarifId == f.TarifId))
+                {
+                    <option value="@t.TarifId" data-tarif1="@Rp(t.Tarif1)" data-tarif2="@Rp(t.Tarif2)" data-jam="@t.JamTarif1">@t.JenisKendaraan</option>
+                }
+            </select>
+            <span></span>
+        </div>
+
+        <div class="form-row-x">
+            <label asp-for="Form.NoPolisi">No. Polisi</label>
+            <input asp-for="Form.NoPolisi" class="form-control text-uppercase" placeholder="B 1234 ABC" autocomplete="off" />
+            <span asp-validation-for="Form.NoPolisi"></span>
+        </div>
+
+        <div class="form-row-x">
+            <label>Tarif 1</label>
+            <input id="tarif1" class="form-control" readonly value="@(tarifAktif is null ? "" : Rp(tarifAktif.Tarif1))" />
+            <span class="note" id="noteTarif1">@(tarifAktif?.JamTarif1 == 2 ? "Dua Jam Pertama" : $"{tarifAktif?.JamTarif1} Jam Pertama")</span>
+        </div>
+
+        <div class="form-row-x">
+            <label>Tarif 2</label>
+            <input id="tarif2" class="form-control" readonly value="@(tarifAktif is null ? "" : Rp(tarifAktif.Tarif2))" />
+            <span class="note">Jam Berikutnya &middot; <a class="btn-flat p-0" asp-controller="Tarif" asp-action="Index">ubah tarif</a></span>
+        </div>
+
+        <div class="form-row-x">
+            <label>Jam Masuk</label>
+            <div class="pair">
+                <input asp-for="Form.TanggalMasuk" type="date" class="form-control hitung" />
+                <input asp-for="Form.JamMasuk" type="time" class="form-control hitung" />
+            </div>
+            <span></span>
+        </div>
+
+        <div class="form-row-x">
+            <label>Jam Keluar</label>
+            <div class="pair">
+                <input asp-for="Form.TanggalKeluar" type="date" class="form-control hitung" />
+                <input asp-for="Form.JamKeluar" type="time" class="form-control hitung" />
+            </div>
+            <span class="field-validation-error" id="errJam"></span>
+        </div>
+
+        <div class="form-row-x">
+            <label>Durasi (Jam)</label>
+            <div class="pair">
+                <input id="durasi" class="form-control computed" readonly value="@Model.Durasi" />
+                <span></span>
+            </div>
+            <span class="note" id="noteDurasi"></span>
+        </div>
+
+        <div class="form-row-x">
+            <label>Bayar</label>
+            <input id="bayar" class="form-control computed" readonly value="@(Model.Bayar is null ? "" : Rp(Model.Bayar.Value))" />
+            <span></span>
+        </div>
+
+        <div class="grid-box mt-4">
+            <table class="table-x">
+                <thead>
+                    <tr>
+                        <th>No</th><th>No Transaksi</th><th>No. Polisi</th><th>Jenis</th>
+                        <th>Jam Masuk</th><th>Jam Keluar</th><th>Durasi</th><th>Jam Ditagih</th><th>Bayar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.DaftarTransaksi.Count == 0)
+                    {
+                        <tr><td colspan="9" class="kosong"><i class="fa fa-inbox fa-2x d-block mb-2"></i>Belum ada transaksi</td></tr>
+                    }
+                    @{ var no = 1; }
+                    @foreach (var t in Model.DaftarTransaksi)
+                    {
+                        <tr class="klik @(t.TransaksiId == f.TransaksiId ? "selected" : "")"
+                            data-href="@Url.Action("Index", new { id = t.TransaksiId })">
+                            <td>@(no++)</td>
+                            <td>@t.NoTransaksi</td>
+                            <td class="kiri">@t.NoPolisi</td>
+                            <td>@t.Tarif?.JenisKendaraan</td>
+                            <td>@t.JamMasuk.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@t.JamKeluar.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td>@($"{t.DurasiMenit / 60:00}:{t.DurasiMenit % 60:00}")</td>
+                            <td>@t.JamDitagih</td>
+                            <td class="kanan">@(t.Bayar == 0 ? Html.Raw("<span class=\"badge-gratis\">Gratis</span>") : Rp(t.Bayar))</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="actions">
+            <button type="submit" class="btn-raised" asp-action="Save" disabled="@dipilih"><i class="fa fa-floppy-o fa-fw"></i> Save</button>
+            <button type="submit" class="btn-raised btn-info-x" asp-action="Edit" disabled="@(!dipilih)"><i class="fa fa-pencil fa-fw"></i> Edit</button>
+            <button type="submit" class="btn-raised btn-bahaya" asp-action="Delete" disabled="@(!dipilih)" data-confirm="Hapus transaksi @f.NoTransaksi?"><i class="fa fa-trash fa-fw"></i> Delete</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+<script>
+(function () {
+    const form = document.getElementById('formParkir');
+    const sel = document.getElementById('tarifId');
+    const $ = id => document.getElementById(id);
+
+    // grid row -> load into form
+    document.querySelectorAll('tr[data-href]').forEach(tr =>
+        tr.addEventListener('click', () => location.href = tr.dataset.href));
+
+    // rates of the selected vehicle type
+    function tampilTarif() {
+        const o = sel.selectedOptions[0];
+        if (!o) return;
+        $('tarif1').value = o.dataset.tarif1;
+        $('tarif2').value = o.dataset.tarif2;
+        $('noteTarif1').textContent = o.dataset.jam === '2' ? 'Dua Jam Pertama' : o.dataset.jam + ' Jam Pertama';
+    }
+
+    // live Durasi / Bayar preview from the server (single source of truth for the rules)
+    const v = name => form.querySelector(`[name="Form.${name}"]`).value;
+    const rp = n => Number(n).toLocaleString('id-ID');
+    let ctrl;
+    async function hitung() {
+        const masuk = v('TanggalMasuk') && v('JamMasuk') ? `${v('TanggalMasuk')}T${v('JamMasuk')}` : null;
+        const keluar = v('TanggalKeluar') && v('JamKeluar') ? `${v('TanggalKeluar')}T${v('JamKeluar')}` : null;
+        $('errJam').textContent = '';
+        if (!masuk || !keluar || !sel.value) return;
+        ctrl?.abort(); ctrl = new AbortController();
+        const qs = new URLSearchParams({ tarifId: sel.value, masuk, keluar });
+        try {
+            const r = await fetch('@Url.Action("Hitung")?' + qs, { signal: ctrl.signal });
+            if (r.status === 400) { $('durasi').value = ''; $('bayar').value = ''; $('errJam').textContent = 'Jam keluar lebih awal dari jam masuk'; return; }
+            if (!r.ok) return;
+            const d = await r.json();
+            $('durasi').value = d.durasi;
+            $('bayar').value = rp(d.bayar);
+            $('noteDurasi').textContent = d.jamDitagih === 0 ? 'Gratis (kurang dari batas menit gratis)' : `Ditagih ${d.jamDitagih} jam`;
+        } catch (e) { if (e.name !== 'AbortError') console.error(e); }
+    }
+
+    sel.addEventListener('change', () => { tampilTarif(); hitung(); });
+    form.querySelectorAll('.hitung').forEach(i => i.addEventListener('change', hitung));
+    tampilTarif(); hitung();
+
+    // block double submit on the client (the server is idempotent anyway)
+    form.addEventListener('submit', e => {
+        const btn = e.submitter;
+        if (btn?.dataset.confirm && !confirm(btn.dataset.confirm)) { e.preventDefault(); return; }
+        if (form.dataset.sending) { e.preventDefault(); return; }
+        form.dataset.sending = '1';
+        setTimeout(() => form.querySelectorAll('button[type=submit]').forEach(b => b.disabled = true));
+    });
+})();
+</script>
+}
