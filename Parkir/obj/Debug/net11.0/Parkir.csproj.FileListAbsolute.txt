@@ -143,3 +143,4 @@
 /Users/a/Documents/seniortest/Parkir/obj/Debug/net11.0/ref/Parkir.dll
 /Users/a/Documents/seniortest/Parkir/bin/Debug/net11.0/Database/ParkirDb.sql
 /Users/a/Documents/seniortest/Parkir/obj/Debug/net11.0/compressed/wunkgwgfh4-{0}-26u4vhvyc2-26u4vhvyc2.gz
+/Users/a/Documents/seniortest/Parkir/obj/Debug/net11.0/Parkir.sourcelink.json

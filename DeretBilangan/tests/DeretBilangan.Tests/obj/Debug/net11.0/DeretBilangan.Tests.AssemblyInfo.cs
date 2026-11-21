@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DeretBilangan.Tests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1262d35737b0e1c835747ef28b350262f7c638a1")]
 [assembly: System.Reflection.AssemblyProductAttribute("DeretBilangan.Tests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DeretBilangan.Tests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
